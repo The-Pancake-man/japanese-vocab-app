@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  # FastAPI backend service
+  backend:
+    build: .
+    container_name: japanese-vocab-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    environment:
+      - DATABASE_URL=postgresql://vocab_user:vocab_pass@postgres:5432/vocab_db
+      - PYTHONUNBUFFERED=1
+      - WATCHFILES_FORCE_POLLING=true
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: vocab-db
+    environment:
+      POSTGRES_USER: vocab_user
+      POSTGRES_PASSWORD: vocab_pass
+      POSTGRES_DB: vocab_db
+    ports:
+      - "5400:5432"
+    volumes:
+      - vocab_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U vocab_user -d vocab_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: vocab-pgadmin
+    environment:
+      # pgAdmin 登入用的 Email 與密碼
+      PGADMIN_DEFAULT_EMAIL: allenwww4@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: 314704037
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    volumes:
+      - vocab_pgadmin_data:/var/lib/pgadmin
+
+volumes:
+  vocab_postgres_data:
+  vocab_pgadmin_data:
