@@ -96,6 +96,9 @@ function switchTab(tabName) {
   panels.forEach((panel) => {
     panel.classList.toggle("active", panel.id === `${tabName}-section`);
   });
+
+  const sidebar = document.querySelector("#sidebar");
+  sidebar.className = `sidebar sidebar-${tabName}`;
 }
 
 function getWordbookName(wordbookId) {
@@ -263,7 +266,7 @@ async function loadWords() {
     renderWords();
 
     document.querySelector("#home-word-count").textContent = words.length;
-    
+
     setStatus(wordStatus, `${words.length} 個單字`);
   } catch (error) {
     setStatus(wordStatus, error.message);

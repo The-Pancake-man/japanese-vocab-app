@@ -32,11 +32,47 @@ body {
 }
 
 .sidebar {
-  background: linear-gradient(180deg, #111827 0%, #1f2937 100%);
+  --sidebar-image: url("/static/images/home.jpg");
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(17, 24, 39, 1) 0%,
+      rgba(31, 41, 55, 0.90) 40%,
+      rgba(31, 41, 55, 0.52) 65%,
+      rgba(31, 41, 55, 0.10) 88%
+    ),
+    var(--sidebar-image);
+
+  background-size: cover;
+  background-position: center bottom;
+  background-repeat: no-repeat;
+
   color: white;
   padding: 24px;
   display: flex;
   flex-direction: column;
+
+  min-height: 100vh;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+}
+
+.sidebar.sidebar-home {
+  --sidebar-image: url("/static/images/home.jpg");
+}
+
+.sidebar.sidebar-wordbooks {
+  --sidebar-image: url("/static/images/wordbooks.jpg");
+}
+
+.sidebar.sidebar-words {
+  --sidebar-image: url("/static/images/words.jpg");
+}
+
+.sidebar.sidebar-quiz {
+  --sidebar-image: url("/static/images/quiz.jpg");
 }
 
 .sidebar-header {
@@ -78,20 +114,20 @@ body {
 }
 
 .nav-button.active {
-  background: white;
-  color: #111827;
-}
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 
-.sidebar-footer {
-  margin-top: auto;
-  color: #9ca3af;
-  font-size: 13px;
-  line-height: 1.5;
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
 }
 
 .main-content {
   padding: 32px;
   overflow-y: auto;
+  min-height: 100vh;
 }
 
 .panel {
@@ -491,4 +527,109 @@ button:disabled {
   .quiz-word {
     font-size: 52px;
   }
+}
+
+#words-section .list {
+  max-height: 560px;
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+#words-section .list-panel {
+  max-height: 680px;
+  overflow: hidden;
+}
+
+#words-section .list-panel-header {
+  position: sticky;
+  top: -1px;
+
+  background: white;
+  z-index: 10;
+
+  padding-bottom: 14px;
+  padding-top: 6px;
+
+  box-shadow: 0 8px 16px rgba(255, 255, 255, 1);
+}
+
+#words-section .list-panel-header {
+  position: sticky;
+  top: -1px;
+
+  background: white;
+  z-index: 10;
+
+  padding-bottom: 14px;
+  padding-top: 6px;
+
+  box-shadow: 0 8px 16px rgba(255, 255, 255, 1);
+}
+
+.hover-image-card {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.hover-image-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background-image: var(--hover-bg);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  z-index: 0;
+}
+
+.hover-image-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background: rgba(255, 255, 255, 0.72);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  z-index: 1;
+}
+
+.hover-image-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.14);
+}
+
+.hover-image-card:hover::before {
+  opacity: 0.35;
+}
+
+.hover-image-card:hover::after {
+  opacity: 1;
+}
+
+/* 讓卡片內文字蓋在背景圖上面 */
+.hover-image-card > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* 各卡片圖片 */
+.hero-bg {
+  --hover-bg: url("/static/images/hero.jpg");
+}
+
+.wordbook-bg {
+  --hover-bg: url("/static/images/wordbook-card.png");
+}
+
+.word-bg {
+  --hover-bg: url("/static/images/word-card.png");
+}
+
+.jlpt-bg {
+  --hover-bg: url("/static/images/jlpt-card.png");
 }
