@@ -363,3 +363,79 @@ def test_quiz_service_returns_words_by_levels():
     result = quiz_service.get_quiz_words(db=db, levels=["N5"])
 
     assert result == words
+
+
+def test_create_vocab_word_commits_and_returns_word():
+    wordbook = WordBook(id=1, name="N5 Vocabulary", description="Basic words")
+
+    db = MagicMock(spec=Session)
+    db.query = MagicMock(
+        side_effect=[
+            make_query(first=wordbook),  # get_wordbook_or_404：單字本存在
+            make_query(first=None),      # check_duplicate_word：沒有重複單字
+        ]
+    )
+
+    payload = VocabWordCreate(
+        wordbook_id=1,
+        word="食べる",
+        hiragana="たべる",
+        jlpt_level="N5",
+        part_of_speech="verb",
+        meaning_zh="吃",
+    )
+
+    result = vocab_service.create_vocab_word(db=db, payload=payload)
+
+    assert isinstance(result, VocabWord)
+    assert result.wordbook_id == 1
+    assert result.word == "食べる"
+    assert result.hiragana == "たべる"
+    assert result.jlpt_level == "N5"
+    assert result.part_of_speech == "verb"
+    assert result.meaning_zh == "吃"
+
+    db.add.assert_called_once_with(result)
+    db.commit.assert_called_once()
+    db.refresh.assert_called_once_with(result)
+
+def test_update_vocab_word_duplicate_word_raises():
+    vocab_word = VocabWord(
+        id=1,
+        wordbook_id=1,
+        word="飲む",
+        hiragana="のむ",
+        jlpt_level="N5",
+        part_of_speech="verb",
+        meaning_zh="喝",
+    )
+
+    existing_word = VocabWord(
+        id=2,
+        wordbook_id=1,
+        word="食べる",
+        hiragana="たべる",
+        jlpt_level="N5",
+        part_of_speech="verb",
+        meaning_zh="吃",
+    )
+
+    db = MagicMock(spec=Session)
+    db.query = MagicMock(
+        side_effect=[
+            make_query(first=vocab_word),     # get_vocab_word_or_404
+            make_query(first=existing_word),  # check_duplicate_word
+        ]
+    )
+
+    payload = VocabWordUpdate(word="食べる")
+
+    with pytest.raises(HTTPException) as excinfo:
+        vocab_service.update_vocab_word(
+            db=db,
+            word_id=1,
+            payload=payload,
+        )
+
+    assert excinfo.value.status_code == 400
+    assert excinfo.value.detail == "Word already exists in this wordbook"

@@ -604,20 +604,19 @@ button:disabled {
 }
 
 .hover-image-card:hover::before {
-  opacity: 0.35;
+  opacity: 0.43;
 }
 
 .hover-image-card:hover::after {
   opacity: 1;
 }
 
-/* 讓卡片內文字蓋在背景圖上面 */
 .hover-image-card > * {
   position: relative;
   z-index: 2;
 }
 
-/* 各卡片圖片 */
+/* 各卡片圖片在這 */
 .hero-bg {
   --hover-bg: url("/static/images/hero.jpg");
 }
@@ -663,4 +662,12 @@ button:disabled {
 
 .quiz-setting-bg {
   --hover-bg: url("/static/images/quiz-setting.jpg");
+}
+
+.hover-image-card:hover {
+  border-color: rgba(37, 99, 235, 0.25);
+
+  box-shadow:
+    0 0 0 1px rgba(37, 99, 235, 0.08),
+    0 16px 35px rgba(15, 23, 42, 0.08);
 }

@@ -19,9 +19,37 @@ def get_vocab_word_or_404(db: Session, word_id: int) -> VocabWord:
 
     return vocab_word
 
+def check_duplicate_word(
+    db: Session,
+    wordbook_id: int,
+    word: str,
+    exclude_word_id: int | None = None,
+) -> None:
+    query = db.query(VocabWord).filter(
+        VocabWord.wordbook_id == wordbook_id,
+        VocabWord.word == word,
+    )
+
+    if exclude_word_id is not None:
+        query = query.filter(VocabWord.id != exclude_word_id)
+
+    existing_word = query.first()
+
+    if existing_word is not None:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Word already exists in this wordbook",
+        )
+
 
 def create_vocab_word(db: Session, payload: VocabWordCreate) -> VocabWord:
     get_wordbook_or_404(db, payload.wordbook_id)
+
+    check_duplicate_word(
+        db=db,
+        wordbook_id=payload.wordbook_id,
+        word=payload.word,
+    )
 
     vocab_word = VocabWord(
         wordbook_id=payload.wordbook_id,
@@ -72,6 +100,20 @@ def update_vocab_word(
     vocab_word = get_vocab_word_or_404(db, word_id)
 
     update_data = payload.model_dump(exclude_unset=True)
+
+    new_wordbook_id = update_data.get("wordbook_id", vocab_word.wordbook_id)
+    new_word = update_data.get("word", vocab_word.word)
+
+    if "wordbook_id" in update_data:
+        get_wordbook_or_404(db, update_data["wordbook_id"])
+
+    if "word" in update_data or "wordbook_id" in update_data:
+        check_duplicate_word(
+            db=db,
+            wordbook_id=new_wordbook_id,
+            word=new_word,
+            exclude_word_id=word_id,
+        )   
 
     if not update_data:
         raise HTTPException(
