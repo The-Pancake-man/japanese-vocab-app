@@ -20,10 +20,7 @@ def make_query(first=None, all_=None):
     return query
 
 
-# =========================
 # WordBook service tests
-# =========================
-
 def test_get_wordbook_or_404_returns_wordbook():
     wordbook = WordBook(id=1, name="N5 Vocabulary", description="Basic words")
 
@@ -160,10 +157,7 @@ def test_delete_wordbook_deletes_and_commits():
     db.commit.assert_called_once()
 
 
-# =========================
 # VocabWord service tests
-# =========================
-
 def test_create_vocab_word_commits_and_returns_word():
     wordbook = WordBook(id=1, name="N5 Vocabulary", description="Basic words")
 
@@ -329,10 +323,7 @@ def test_delete_vocab_word_deletes_and_commits():
     db.commit.assert_called_once()
 
 
-# =========================
 # Quiz service tests
-# =========================
-
 def test_quiz_service_rejects_empty_levels():
     db = MagicMock(spec=Session)
 

@@ -17,10 +17,7 @@ from src.schemas.vocab_word import (
 )
 
 
-# =========================
 # WordBook schema tests
-# =========================
-
 def test_wordbook_create_valid():
     payload = WordBookCreate(
         name="N5 Vocabulary",
@@ -79,10 +76,7 @@ def test_wordbook_list_response_accepts_items():
     assert response.items[0].name == "N5 Vocabulary"
 
 
-# =========================
 # VocabWord schema tests
-# =========================
-
 def test_vocab_word_create_valid():
     payload = VocabWordCreate(
         wordbook_id=1,
