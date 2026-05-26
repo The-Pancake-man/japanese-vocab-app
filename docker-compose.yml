@@ -26,7 +26,7 @@ services:
       POSTGRES_PASSWORD: vocab_pass
       POSTGRES_DB: vocab_db
     ports:
-      - "5400:5432"
+      - "15432:5432"
     volumes:
       - vocab_postgres_data:/var/lib/postgresql/data
     healthcheck:
