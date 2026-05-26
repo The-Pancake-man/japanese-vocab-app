@@ -633,3 +633,34 @@ button:disabled {
 .jlpt-bg {
   --hover-bg: url("/static/images/jlpt-card.png");
 }
+
+.wordbook-form-bg {
+  --hover-bg: url("/static/images/wordbook-form.jpg");
+}
+
+.wordbook-list-bg {
+  --hover-bg: url("/static/images/wordbook-list.jpg");
+}
+
+#wordbooks-section .list-panel {
+  max-height: 560px;
+  overflow: hidden;
+}
+
+#wordbooks-section .list {
+  max-height: 460px;
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+.word-form-bg {
+  --hover-bg: url("/static/images/word-form.jpg");
+}
+
+.word-list-bg {
+  --hover-bg: url("/static/images/word-list.jpg");
+}
+
+.quiz-setting-bg {
+  --hover-bg: url("/static/images/quiz-setting.jpg");
+}
