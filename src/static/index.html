@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Japanese Vocabulary App</title>
+    <link rel="stylesheet" href="/static/styles.css?v=3" />
+  </head>
+
+  <body>
+    <div class="app-shell">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <div>
+            <h1>JP Vocab</h1>
+            <p>日文單字學習系統</p>
+          </div>
+        </div>
+
+        <nav class="sidebar-nav">
+          <button class="nav-button active" data-tab="home">主頁</button>
+          <button class="nav-button" data-tab="wordbooks">單字本管理</button>
+          <button class="nav-button" data-tab="words">單字庫</button>
+          <button class="nav-button" data-tab="quiz">開始測驗</button>
+        </nav>
+
+        <div class="sidebar-footer">
+          <p>FastAPI + PostgreSQL</p>
+          <p>JLPT Vocabulary Practice</p>
+        </div>
+      </aside>
+
+      <!-- Main -->
+      <main class="main-content">
+        <!-- Home -->
+        <section id="home-section" class="panel active">
+          <div class="hero-card">
+            <p class="eyebrow">Japanese Vocabulary App</p>
+            <h2>建立自己的日文單字庫，並用測驗模式反覆練習。</h2>
+            <p>
+              這個系統可以新增單字本、管理日文單字，並依照 JLPT 等級進行自我檢測。
+            </p>
+
+            <div class="hero-actions">
+              <button class="primary-button nav-shortcut" data-target="wordbooks">建立單字本</button>
+              <button class="secondary-button nav-shortcut" data-target="words">新增單字</button>
+              <button class="secondary-button nav-shortcut" data-target="quiz">開始測驗</button>
+            </div>
+          </div>
+
+          <div class="dashboard-grid">
+            <div class="stat-card">
+              <span id="home-wordbook-count">0</span>
+              <p>單字本數量</p>
+            </div>
+            <div class="stat-card">
+              <span id="home-word-count">0</span>
+              <p>單字數量</p>
+            </div>
+            <div class="stat-card">
+              <span>5</span>
+              <p>JLPT 等級</p>
+            </div>
+          </div>
+
+          <div class="info-grid">
+            <article class="info-card">
+              <h3>1. 單字本管理</h3>
+              <p>建立 N5、N4、旅遊日文等不同單字本。</p>
+            </article>
+            <article class="info-card">
+              <h3>2. 單字庫</h3>
+              <p>新增、編輯、刪除日文單字，並記錄平假名、詞性與中文意思。</p>
+            </article>
+            <article class="info-card">
+              <h3>3. 測驗模式</h3>
+              <p>依照 JLPT 等級抽出單字，先看日文，再點擊顯示中文意思。</p>
+            </article>
+          </div>
+        </section>
+
+        <!-- WordBook Section -->
+        <section id="wordbooks-section" class="panel">
+          <div class="page-header">
+            <div>
+              <p class="eyebrow">WordBook</p>
+              <h2>單字本管理</h2>
+            </div>
+            <span id="wordbook-status" class="status-text">Loading...</span>
+          </div>
+
+          <div class="content-grid">
+            <form id="wordbook-form" class="form-card">
+              <input type="hidden" id="wordbook-id" />
+
+              <h3>新增 / 編輯單字本</h3>
+
+              <label>
+                單字本名稱
+                <input id="wordbook-name" type="text" maxlength="100" placeholder="例如：N5 Vocabulary" required />
+              </label>
+
+              <label>
+                描述
+                <textarea id="wordbook-description" placeholder="例如：基礎日文單字"></textarea>
+              </label>
+
+              <div class="form-actions">
+                <button type="submit" class="primary-button">儲存單字本</button>
+                <button type="button" id="clear-wordbook-button" class="secondary-button">清空</button>
+              </div>
+            </form>
+
+            <div class="list-panel">
+              <h3>目前單字本</h3>
+              <div id="wordbook-list" class="list"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Words Section -->
+        <section id="words-section" class="panel">
+          <div class="page-header">
+            <div>
+              <p class="eyebrow">Vocabulary</p>
+              <h2>單字庫</h2>
+            </div>
+            <span id="word-status" class="status-text">Loading...</span>
+          </div>
+
+          <div class="content-grid">
+            <form id="word-form" class="form-card">
+              <input type="hidden" id="word-id" />
+
+              <h3>新增 / 編輯單字</h3>
+
+              <label>
+                所屬單字本
+                <select id="word-wordbook-id" required></select>
+              </label>
+
+              <label>
+                日文單字
+                <input id="word-text" type="text" maxlength="100" placeholder="例如：食べる" required />
+              </label>
+
+              <label>
+                平假名
+                <input id="word-hiragana" type="text" maxlength="100" placeholder="例如：たべる，可空白" />
+              </label>
+
+              <label>
+                JLPT 等級
+                <select id="word-jlpt-level" required>
+                  <option value="N5">N5</option>
+                  <option value="N4">N4</option>
+                  <option value="N3">N3</option>
+                  <option value="N2">N2</option>
+                  <option value="N1">N1</option>
+                </select>
+              </label>
+
+              <label>
+                詞性
+                <select id="word-part-of-speech" required>
+                  <option value="noun">名詞</option>
+                  <option value="verb">動詞</option>
+                  <option value="i_adjective">い形容詞</option>
+                  <option value="na_adjective">な形容詞</option>
+                  <option value="adverb">副詞</option>
+                  <option value="expression">慣用語 / 表現</option>
+                  <option value="other">其他</option>
+                </select>
+              </label>
+
+              <label>
+                中文意思
+                <textarea id="word-meaning" placeholder="例如：吃" required></textarea>
+              </label>
+
+              <div class="form-actions">
+                <button type="submit" class="primary-button">儲存單字</button>
+                <button type="button" id="clear-word-button" class="secondary-button">清空</button>
+              </div>
+            </form>
+
+            <div class="list-panel">
+              <div class="list-panel-header">
+                <h3>所有單字</h3>
+                <select id="filter-jlpt-level">
+                  <option value="">全部</option>
+                  <option value="N5">N5</option>
+                  <option value="N4">N4</option>
+                  <option value="N3">N3</option>
+                  <option value="N2">N2</option>
+                  <option value="N1">N1</option>
+                </select>
+              </div>
+
+              <div id="word-list" class="list"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Quiz Section -->
+        <section id="quiz-section" class="panel">
+          <div class="page-header">
+            <div>
+              <p class="eyebrow">Quiz</p>
+              <h2>開始測驗</h2>
+            </div>
+            <span id="quiz-status" class="status-text">選擇 JLPT 等級後開始</span>
+          </div>
+
+          <div class="quiz-layout">
+            <div class="form-card">
+              <h3>測驗設定</h3>
+              <p class="hint">選擇接下來要出現的單字等級：</p>
+
+              <div class="checkbox-group">
+                <label><input type="checkbox" name="quiz-level" value="N5" checked /> N5</label>
+                <label><input type="checkbox" name="quiz-level" value="N4" /> N4</label>
+                <label><input type="checkbox" name="quiz-level" value="N3" /> N3</label>
+                <label><input type="checkbox" name="quiz-level" value="N2" /> N2</label>
+                <label><input type="checkbox" name="quiz-level" value="N1" /> N1</label>
+              </div>
+
+              <div class="form-actions">
+                <button id="start-quiz-button" type="button" class="primary-button">開始測驗</button>
+                <button id="end-quiz-button" type="button" class="danger-button" disabled>結束測驗</button>
+              </div>
+            </div>
+
+            <div id="quiz-card" class="quiz-card hidden">
+              <div id="quiz-level" class="quiz-level"></div>
+              <div id="quiz-word" class="quiz-word"></div>
+              <div id="quiz-hiragana" class="quiz-hiragana"></div>
+              <div id="quiz-meaning" class="quiz-meaning hidden"></div>
+              <button id="quiz-next-button" type="button" class="primary-button quiz-button">
+                顯示中文意思
+              </button>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="/static/app.js?v=3"></script>
+  </body>
+</html>
