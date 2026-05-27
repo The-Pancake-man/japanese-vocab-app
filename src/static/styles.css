@@ -633,7 +633,7 @@ button:disabled {
 }
 
 .wordbook-list-bg {
-  --hover-bg: url("/static/images/wordbook-list.jpg");
+  --hover-bg: url("/static/images/wordbook-list.jpeg");
 }
 
 #wordbooks-section .list-panel {
