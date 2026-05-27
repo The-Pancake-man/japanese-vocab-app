@@ -544,27 +544,13 @@ button:disabled {
   position: sticky;
   top: -1px;
 
-  background: white;
+  background: transparent;
   z-index: 10;
 
   padding-bottom: 14px;
   padding-top: 6px;
-
-  box-shadow: 0 8px 16px rgba(255, 255, 255, 1);
 }
 
-#words-section .list-panel-header {
-  position: sticky;
-  top: -1px;
-
-  background: white;
-  z-index: 10;
-
-  padding-bottom: 14px;
-  padding-top: 6px;
-
-  box-shadow: 0 8px 16px rgba(255, 255, 255, 1);
-}
 
 .hover-image-card {
   position: relative;
