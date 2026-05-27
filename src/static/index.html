@@ -181,21 +181,27 @@
             </form>
 
             <div class="list-panel hover-image-card word-list-bg">
-              <div class="list-panel-header">
+            <div class="list-panel-header">
                 <h3>所有單字</h3>
-                <select id="filter-jlpt-level">
-                  <option value="">全部</option>
-                  <option value="N5">N5</option>
-                  <option value="N4">N4</option>
-                  <option value="N3">N3</option>
-                  <option value="N2">N2</option>
-                  <option value="N1">N1</option>
-                </select>
-              </div>
 
-              <div id="word-list" class="list"></div>
+                <div class="list-filter">
+                <select id="wordbook-filter">
+                    <option value="">全部單字本</option>
+                </select>
+
+                <select id="filter-jlpt-level">
+                    <option value="">全部等級</option>
+                    <option value="N5">N5</option>
+                    <option value="N4">N4</option>
+                    <option value="N3">N3</option>
+                    <option value="N2">N2</option>
+                    <option value="N1">N1</option>
+                </select>
+                </div>
             </div>
-          </div>
+
+            <div id="word-list" class="list"></div>
+            </div>
         </section>
 
         <!-- Quiz Section -->

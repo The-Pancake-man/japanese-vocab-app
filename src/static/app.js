@@ -55,6 +55,8 @@ const quizHiragana = document.querySelector("#quiz-hiragana");
 const quizMeaning = document.querySelector("#quiz-meaning");
 const quizNextButton = document.querySelector("#quiz-next-button");
 
+const wordbookFilterSelect = document.querySelector("#wordbook-filter");
+
 async function requestJson(url, options = {}) {
   const headers = {
     "Content-Type": "application/json",
@@ -132,6 +134,15 @@ async function loadWordbooks() {
 
     renderWordbooks();
     renderWordbookOptions();
+
+    wordbookFilterSelect.innerHTML = '<option value="">全部單字本</option>';
+
+    wordbooks.forEach((wordbook) => {
+      const option = document.createElement("option");
+      option.value = wordbook.id;
+      option.textContent = wordbook.name;
+      wordbookFilterSelect.appendChild(option);
+    });
 
     document.querySelector("#home-wordbook-count").textContent = wordbooks.length;
 
@@ -257,15 +268,32 @@ async function loadWords() {
   setStatus(wordStatus, "Loading...");
 
   try {
+    const params = new URLSearchParams();
+
+    // JLPT 篩選
     const level = filterJlptSelect.value;
-    const url = level ? `${API.words}?jlpt_level=${encodeURIComponent(level)}` : API.words;
+    if (level) {
+      params.append("jlpt_level", level);
+    }
+
+    // 單字本篩選
+    const wordbookId = wordbookFilterSelect.value;
+    if (wordbookId) {
+      params.append("wordbook_id", wordbookId);
+    }
+
+    // 組 API URL
+    const url = params.toString()
+      ? `${API.words}?${params.toString()}`
+      : API.words;
 
     const data = await requestJson(url);
     words = data.items || [];
 
     renderWords();
 
-    document.querySelector("#home-word-count").textContent = words.length;
+    document.querySelector("#home-word-count").textContent =
+      words.length;
 
     setStatus(wordStatus, `${words.length} 個單字`);
   } catch (error) {
@@ -505,4 +533,8 @@ quizNextButton.addEventListener("click", handleQuizNext);
 document.addEventListener("DOMContentLoaded", async () => {
   await loadWordbooks();
   await loadWords();
+});
+
+wordbookFilterSelect?.addEventListener("change", () => {
+  loadWords();
 });
